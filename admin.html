@@ -255,19 +255,11 @@ textarea{ resize:vertical; min-height:5rem; }
 
     <!-- CONTACT -->
     <section class="pane active" data-pane="contact">
-      <p class="section-desc">These power every Email / WhatsApp button on the landing page, including the pre-filled intake message a visitor sees before sending.</p>
+      <p class="section-desc">These power every "Email me" button on the landing page, including the pre-filled intake message a visitor sees before sending. Anything a visitor ticks under "What you get" is appended automatically — no need to account for it here.</p>
       <div class="grid2">
         <div class="field">
           <label for="c-email">Email address</label>
           <input type="email" id="c-email">
-        </div>
-        <div class="field">
-          <label for="c-whatsapp">WhatsApp number (digits only, with country code)</label>
-          <input type="text" id="c-whatsapp" placeholder="254721403090">
-        </div>
-        <div class="field">
-          <label for="c-phone-display">Phone, as shown on buttons</label>
-          <input type="text" id="c-phone-display" placeholder="+254 721 403 090">
         </div>
         <div class="field">
           <label for="c-linkedin">LinkedIn profile URL</label>
@@ -282,10 +274,6 @@ textarea{ resize:vertical; min-height:5rem; }
         <label for="c-email-template">Email pre-filled message</label>
         <textarea id="c-email-template" rows="6"></textarea>
         <p class="hint">Leave blank lines where you want visitors to fill in details, e.g. "Programme name:".</p>
-      </div>
-      <div class="field">
-        <label for="c-wa-template">WhatsApp pre-filled message</label>
-        <textarea id="c-wa-template" rows="5"></textarea>
       </div>
     </section>
 
@@ -368,12 +356,9 @@ textarea{ resize:vertical; min-height:5rem; }
   var DEFAULTS = {
     contact: {
       email: "agolatomoe@gmail.com",
-      whatsapp: "254721403090",
-      phoneDisplay: "+254 721 403 090",
       linkedinUrl: "",
       emailSubject: "Delivery conversation",
-      emailTemplate: "Hi Rhoda,\n\nI'd like to talk about a programme that needs delivery support.\n\nProgramme name: \nCurrent situation: \nTimeline: \n",
-      whatsappTemplate: "Hi Rhoda, I'd like to talk about a programme that needs delivery support.\n\nProgramme name: \nCurrent situation: \nTimeline: "
+      emailTemplate: "Hi Rhoda,\n\nI'd like to talk about a programme that needs delivery support.\n\nProgramme name: \nCurrent situation: \nTimeline: \n"
     },
     linkedinPosts: [],
     caseStudies: [
@@ -452,9 +437,8 @@ textarea{ resize:vertical; min-height:5rem; }
   /* ---------- contact tab ---------- */
   function bindContact(){
     var map = {
-      "c-email":"email", "c-whatsapp":"whatsapp", "c-phone-display":"phoneDisplay",
-      "c-linkedin":"linkedinUrl", "c-subject":"emailSubject",
-      "c-email-template":"emailTemplate", "c-wa-template":"whatsappTemplate"
+      "c-email":"email", "c-linkedin":"linkedinUrl", "c-subject":"emailSubject",
+      "c-email-template":"emailTemplate"
     };
     Object.keys(map).forEach(function(id){
       var el = document.getElementById(id);
