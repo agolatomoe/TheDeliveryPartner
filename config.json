@@ -1,0 +1,82 @@
+{
+  "contact": {
+    "email": "agolatomoe@gmail.com",
+    "whatsapp": "254721403090",
+    "phoneDisplay": "+254 721 403 090",
+    "linkedinUrl": "",
+    "emailSubject": "Delivery conversation",
+    "emailTemplate": "Hi Rhoda,\n\nI'd like to talk about a programme that needs delivery support.\n\nProgramme name: \nCurrent situation: \nTimeline: \n",
+    "whatsappTemplate": "Hi Rhoda, I'd like to talk about a programme that needs delivery support.\n\nProgramme name: \nCurrent situation: \nTimeline: "
+  },
+  "linkedinPosts": [
+    {
+      "url": "https://www.linkedin.com/posts/activity-7475498267095535616-oE_u?utm_source=share&utm_medium=member_desktop&rcm=ACoAAAN_Z9kBYv-pmiKtGptnwBmp576Yl3qaMAQ",
+      "date": "June 2026",
+      "summary": "The Translation No One Owns\n\nWho is responsible for translating a roadmap into the actual reallocation of capacity it requires?"
+    },
+    {
+      "url": "https://www.linkedin.com/posts/activity-7472532453987868672-8HKJ?utm_source=share&utm_medium=member_desktop&rcm=ACoAAAN_Z9kBYv-pmiKtGptnwBmp576Yl3qaMAQ",
+      "date": "June 2026",
+      "summary": "The Manager Who Wants to Be Replaced\n\nMost managers do not actually want their teams to replace them. The incentives explain why."
+    }
+  ],
+  "caseStudies": [
+    {
+      "year": "2024–2025",
+      "location": "Pan-African",
+      "title": "AU Civic Tech Fund (AUCTF 2.0)",
+      "description": "Coordinated delivery across GIZ, CTIN and Ushahidi for a 15-organisation grantee cohort. One grantee won the Nelson Mandela–Graça Machel Innovation Award.",
+      "outcomes": [
+        "15 grantee orgs · 13 countries",
+        "190,000+ direct beneficiaries",
+        "42 policy processes influenced"
+      ]
+    },
+    {
+      "year": "2025",
+      "location": "Oyo, Osun & Ondo, Nigeria",
+      "title": "NetHope Climate Resilience",
+      "description": "Multi-state participatory climate design across NetHope, YARN and state government — community priorities feeding directly into state-level planning.",
+      "outcomes": [
+        "3 states coordinated",
+        "9,500+ people reached"
+      ]
+    },
+    {
+      "year": "2024",
+      "location": "Tana River, Kenya",
+      "title": "Tana River Climate Action",
+      "description": "SMS, WhatsApp and zero-rated reporting tools built with GIZ, NCPWD, AKCMO and county government — accessible to persons with disabilities and rural households.",
+      "outcomes": [
+        "4 partners aligned",
+        "4,000+ residents reached"
+      ]
+    },
+    {
+      "year": "2024",
+      "location": "Yumbe, Uganda",
+      "title": "NetHope Climate Action",
+      "description": "Participatory climate data across host and refugee communities — surfaced how climate stress deepens GBV, feeding directly into district planning.",
+      "outcomes": [
+        "14 sub-counties covered",
+        "1,700+ community members engaged"
+      ]
+    }
+  ],
+  "organisations": [
+    "Ushahidi",
+    "UN WFP",
+    "UN-Habitat",
+    "iHub",
+    "GIZ",
+    "African Union",
+    "CTIN",
+    "AfDB",
+    "NetHope",
+    "YARN",
+    "NCPWD",
+    "AKCMO",
+    "YUGNET",
+    "Tana River County Government"
+  ]
+}
