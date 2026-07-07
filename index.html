@@ -343,6 +343,14 @@ section{
   border:1px solid var(--line-strong);
   border-radius:2px;
 }
+.track-photo{
+  width:5rem;
+  height:5rem;
+  flex:none;
+  object-fit:cover;
+  border:1px solid var(--line-strong);
+  border-radius:2px;
+}
 .hero-ctas{
   margin-top:2.1rem;
   display:flex;
@@ -742,10 +750,22 @@ section{
 .li-card{
   background:var(--paper);
   border:1px solid var(--line);
+  display:flex;
+  flex-direction:column;
+}
+.li-card .li-image{
+  width:100%;
+  aspect-ratio:16/9;
+  object-fit:cover;
+  display:block;
+  border-bottom:1px solid var(--line);
+}
+.li-card .li-body{
   padding:clamp(1.25rem,2.5vw,1.75rem);
   display:flex;
   flex-direction:column;
   gap:0.75rem;
+  flex:1;
 }
 .li-card .date{
   font-family:'IBM Plex Mono', ui-monospace, monospace;
@@ -892,7 +912,7 @@ footer{
   <div class="sheet">
     <div class="hero-grid">
       <div>
-        <p class="eyebrow">PROGRAMME DELIVERY — NOT PROGRAMME DESIGN</p>
+        <p class="eyebrow">PROGRAMME DELIVERY</p>
         <h1 class="display" style="margin-top:1rem;">
           The hardest part of a complex programme isn't designing it.<br>
           <span class="line2">It's delivering it.</span>
@@ -1104,6 +1124,7 @@ footer{
         <p class="eyebrow">14 YEARS, FOUR SYSTEMS</p>
         <h2 class="display section-title" style="margin-top:0.6rem;">I build what's missing. Then I leave it standing.</h2>
       </div>
+      <img class="track-photo" src="rhoda.jpg" alt="Rhoda Omenya" onerror="this.remove()">
       <span class="sheet-no mono">SHEET 06 / 10</span>
     </div>
     <div class="track reveal">
@@ -1380,17 +1401,30 @@ footer{
       var card = document.createElement("div");
       card.className = "li-card";
 
+      if(post.image){
+        var img = document.createElement("img");
+        img.className = "li-image";
+        img.src = post.image;
+        img.alt = "";
+        img.loading = "lazy";
+        img.onerror = function(){ img.remove(); };
+        card.appendChild(img);
+      }
+
+      var body = document.createElement("div");
+      body.className = "li-body";
+
       if(post.date){
         var date = document.createElement("p");
         date.className = "date";
         date.textContent = post.date;
-        card.appendChild(date);
+        body.appendChild(date);
       }
 
       var summary = document.createElement("p");
       summary.className = "summary";
       summary.textContent = post.summary || "";
-      card.appendChild(summary);
+      body.appendChild(summary);
 
       if(post.url){
         var link = document.createElement("a");
@@ -1399,8 +1433,9 @@ footer{
         link.target = "_blank";
         link.rel = "noopener";
         link.textContent = "Read on LinkedIn ↗";
-        card.appendChild(link);
+        body.appendChild(link);
       }
+      card.appendChild(body);
       grid.appendChild(card);
     });
   }
