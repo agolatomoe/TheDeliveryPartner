@@ -332,14 +332,6 @@ section{
   color:var(--ink);
 }
 .byline strong{ font-weight:600; }
-.track-photo{
-  width:5rem;
-  height:5rem;
-  flex:none;
-  object-fit:cover;
-  border:1px solid var(--line-strong);
-  border-radius:2px;
-}
 .hero-ctas{
   margin-top:2.1rem;
   display:flex;
@@ -404,15 +396,18 @@ section{
 
 /* ============ PULL QUOTE ============ */
 .pullquote{
-  display:grid;
-  grid-template-columns:auto minmax(0,1fr) auto;
+  display:flex;
+  align-items:flex-start;
+  gap:2rem;
+}
+@media (max-width:820px){ .pullquote{ flex-wrap:wrap; } }
+.pullquote-text-group{
+  display:flex;
   gap:clamp(1.25rem,4vw,2.5rem);
   align-items:start;
 }
-@media (max-width:820px){ .pullquote{ grid-template-columns:auto 1fr; } }
 .pullquote .bar{
   width:3px;
-  height:100%;
   background:var(--red);
   align-self:stretch;
 }
@@ -434,7 +429,7 @@ section{
 }
 .pullquote-photo-frame{
   position:relative;
-  width:min(13rem, 30vw);
+  width:min(17rem, 36vw);
   aspect-ratio:4/5;
   border:1px solid var(--line-strong);
   flex:none;
@@ -994,10 +989,12 @@ footer{
       <span class="sheet-no mono">SHEET 01 / 10</span>
     </div>
     <div class="pullquote reveal">
-      <div class="bar"></div>
-      <div>
-        <p>Every organisation I've entered was missing something critical to delivery. Systems and structure come with me — but they're a by-product. The product is delivery.</p>
-        <p class="cite">— Rhoda Omenya</p>
+      <div class="pullquote-text-group">
+        <div class="bar"></div>
+        <div>
+          <p>Every organisation I've entered was missing something critical to delivery. Systems and structure come with me — but they're a by-product. The product is delivery.</p>
+          <p class="cite">— Rhoda Omenya</p>
+        </div>
       </div>
       <div class="pullquote-photo-frame">
         <img class="pullquote-photo" src="Rhoda.png" alt="Rhoda Omenya" onerror="this.closest('.pullquote-photo-frame').remove()">
@@ -1141,7 +1138,6 @@ footer{
         <p class="eyebrow">14 YEARS, FOUR SYSTEMS</p>
         <h2 class="display section-title" style="margin-top:0.6rem;">I build what's missing. Then I leave it standing.</h2>
       </div>
-      <img class="track-photo" src="Rhoda.png" alt="Rhoda Omenya" onerror="this.remove()">
       <span class="sheet-no mono">SHEET 06 / 10</span>
     </div>
     <div class="track reveal">
