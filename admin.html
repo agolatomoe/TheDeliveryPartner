@@ -1,0 +1,669 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Delivery Partner — Admin</title>
+<style>
+:root{
+  --paper:#EAEEE4;
+  --paper-alt:#DFE4D6;
+  --ink:#1A2333;
+  --ink-soft:#4B5567;
+  --blue:#1E3F73;
+  --red:#C43E24;
+  --red-deep:#93301A;
+  --green:#2E7D46;
+  --line:rgba(30,63,115,0.24);
+  --line-strong:rgba(30,63,115,0.4);
+  --card-bg:#fff;
+  --focus:#C43E24;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --paper:#0E1B2E;
+    --paper-alt:#132745;
+    --ink:#E9ECE3;
+    --ink-soft:#AAB4C4;
+    --blue:#82A6E6;
+    --red:#FF7A52;
+    --red-deep:#FFAE8E;
+    --green:#7FD99A;
+    --line:rgba(232,238,255,0.16);
+    --line-strong:rgba(232,238,255,0.28);
+    --card-bg:#132038;
+    --focus:#FF9C7A;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#0E1B2E; --paper-alt:#132745; --ink:#E9ECE3; --ink-soft:#AAB4C4;
+  --blue:#82A6E6; --red:#FF7A52; --red-deep:#FFAE8E; --green:#7FD99A;
+  --line:rgba(232,238,255,0.16); --line-strong:rgba(232,238,255,0.28);
+  --card-bg:#132038; --focus:#FF9C7A;
+}
+:root[data-theme="light"]{
+  --paper:#EAEEE4; --paper-alt:#DFE4D6; --ink:#1A2333; --ink-soft:#4B5567;
+  --blue:#1E3F73; --red:#C43E24; --red-deep:#93301A; --green:#2E7D46;
+  --line:rgba(30,63,115,0.24); --line-strong:rgba(30,63,115,0.4);
+  --card-bg:#fff; --focus:#C43E24;
+}
+*,*::before,*::after{box-sizing:border-box;}
+body{
+  margin:0;
+  background:var(--paper);
+  color:var(--ink);
+  font-family:ui-monospace, "IBM Plex Mono", "SF Mono", Menlo, Consolas, monospace;
+  font-size:14px;
+  line-height:1.55;
+}
+h1,h2,h3,p{ margin:0; }
+:focus-visible{ outline:2px solid var(--focus); outline-offset:2px; }
+a{ color:var(--red); }
+
+/* ---- login screen ---- */
+.login-screen{
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:1.5rem;
+}
+.login-box{
+  width:100%;
+  max-width:22rem;
+  border:1px solid var(--line-strong);
+  background:var(--card-bg);
+  padding:2rem;
+}
+.login-box h1{
+  font-size:1rem;
+  text-transform:uppercase;
+  letter-spacing:0.06em;
+  margin-bottom:0.3rem;
+}
+.login-box .sub{ color:var(--ink-soft); font-size:0.8rem; margin-bottom:1.5rem; }
+.login-box input{ width:100%; }
+.login-box .err{ color:var(--red); font-size:0.8rem; margin-top:0.6rem; min-height:1.2em; }
+
+/* ---- shell ---- */
+.shell{ display:none; min-height:100vh; }
+.shell.active{ display:block; }
+header.top{
+  position:sticky; top:0; z-index:10;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:1rem;
+  padding:1rem 1.5rem;
+  border-bottom:1px solid var(--line);
+  background:color-mix(in srgb, var(--paper) 92%, transparent);
+  backdrop-filter:blur(4px);
+  flex-wrap:wrap;
+}
+header.top h1{
+  font-size:0.85rem;
+  text-transform:uppercase;
+  letter-spacing:0.06em;
+}
+.status{ font-size:0.76rem; color:var(--ink-soft); }
+.status.dirty{ color:var(--red); }
+
+.tabs{
+  display:flex;
+  gap:0.25rem;
+  padding:0 1.5rem;
+  border-bottom:1px solid var(--line);
+  overflow-x:auto;
+}
+.tab-btn{
+  font-family:inherit;
+  font-size:0.78rem;
+  text-transform:uppercase;
+  letter-spacing:0.04em;
+  background:none;
+  border:none;
+  border-bottom:2px solid transparent;
+  padding:0.85rem 0.9rem;
+  color:var(--ink-soft);
+  cursor:pointer;
+  white-space:nowrap;
+}
+.tab-btn.active{ color:var(--ink); border-bottom-color:var(--red); }
+.tab-btn:hover{ color:var(--ink); }
+
+main{ padding:1.75rem 1.5rem 5rem; max-width:56rem; margin:0 auto; }
+.pane{ display:none; flex-direction:column; gap:1.75rem; }
+.pane.active{ display:flex; }
+
+.field{ display:flex; flex-direction:column; gap:0.35rem; }
+.field label{ font-size:0.76rem; text-transform:uppercase; letter-spacing:0.05em; color:var(--ink-soft); }
+.field .hint{ font-size:0.74rem; color:var(--ink-soft); }
+input[type="text"], input[type="email"], input[type="password"], input[type="url"], input[type="date"], textarea{
+  font-family:inherit;
+  font-size:0.86rem;
+  color:var(--ink);
+  background:var(--card-bg);
+  border:1px solid var(--line-strong);
+  border-radius:2px;
+  padding:0.6em 0.7em;
+  width:100%;
+}
+textarea{ resize:vertical; min-height:5rem; }
+.grid2{ display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
+@media (max-width:640px){ .grid2{ grid-template-columns:1fr; } }
+
+.btn{
+  font-family:inherit;
+  font-size:0.8rem;
+  letter-spacing:0.02em;
+  padding:0.6em 1.1em;
+  border-radius:2px;
+  border:1px solid var(--line-strong);
+  background:transparent;
+  color:var(--ink);
+  cursor:pointer;
+  display:inline-flex;
+  align-items:center;
+  gap:0.5em;
+}
+.btn:hover{ border-color:var(--ink); }
+.btn-primary{ background:var(--red); border-color:var(--red); color:#fff; }
+.btn-primary:hover{ background:var(--red-deep); border-color:var(--red-deep); }
+.btn-danger{ color:var(--red); border-color:var(--red); }
+.btn-sm{ font-size:0.72rem; padding:0.4em 0.7em; }
+
+.card{
+  border:1px solid var(--line-strong);
+  background:var(--card-bg);
+  padding:1.25rem;
+  display:flex;
+  flex-direction:column;
+  gap:0.9rem;
+}
+.card-row-head{ display:flex; justify-content:space-between; align-items:flex-start; gap:1rem; }
+.entry-list{ display:flex; flex-direction:column; gap:1rem; }
+.section-title{ font-size:0.95rem; text-transform:uppercase; letter-spacing:0.04em; }
+.section-desc{ font-size:0.8rem; color:var(--ink-soft); max-width:60ch; }
+.chip-preview{ display:flex; flex-wrap:wrap; gap:0.4rem; }
+.chip-preview span{
+  font-size:0.72rem;
+  border:1px solid var(--green);
+  color:var(--green);
+  padding:0.3em 0.55em;
+  border-radius:2px;
+}
+.divider{ border-top:1px dashed var(--line-strong); margin:0.25rem 0; }
+.save-bar{
+  position:fixed;
+  bottom:0; left:0; right:0;
+  display:flex;
+  justify-content:center;
+  gap:0.75rem;
+  padding:0.9rem 1.5rem;
+  background:color-mix(in srgb, var(--paper) 94%, transparent);
+  backdrop-filter:blur(4px);
+  border-top:1px solid var(--line-strong);
+  z-index:20;
+}
+.toast{
+  position:fixed;
+  top:1rem; right:1rem;
+  background:var(--green);
+  color:#0E1B2E;
+  padding:0.7em 1.1em;
+  border-radius:2px;
+  font-size:0.8rem;
+  z-index:50;
+  transition:opacity 0.3s ease, transform 0.3s ease;
+}
+.toast.hidden{ opacity:0; transform:translateY(-8px); pointer-events:none; }
+.note{ font-size:0.78rem; color:var(--ink-soft); background:var(--paper-alt); border:1px solid var(--line); padding:0.9rem 1rem; }
+</style>
+</head>
+<body>
+
+<div class="login-screen" id="login-screen">
+  <div class="login-box">
+    <h1>The Delivery Partner — Admin</h1>
+    <p class="sub">Enter the admin password to edit contact details, LinkedIn posts, case studies and organisations.</p>
+    <form id="login-form">
+      <div class="field">
+        <label for="login-pw">Password</label>
+        <input type="password" id="login-pw" autocomplete="current-password" autofocus>
+      </div>
+      <p class="err" id="login-err"></p>
+      <button type="submit" class="btn btn-primary" style="margin-top:0.5rem;width:100%;justify-content:center;">Log in</button>
+    </form>
+  </div>
+</div>
+
+<div class="shell" id="shell">
+  <header class="top">
+    <h1>The Delivery Partner — Admin</h1>
+    <span class="status" id="status">All changes saved locally in this browser</span>
+  </header>
+
+  <nav class="tabs">
+    <button class="tab-btn active" data-tab="contact">Contact Details</button>
+    <button class="tab-btn" data-tab="linkedin">LinkedIn Posts</button>
+    <button class="tab-btn" data-tab="cases">Case Studies</button>
+    <button class="tab-btn" data-tab="orgs">Organisations</button>
+    <button class="tab-btn" data-tab="settings">Settings</button>
+  </nav>
+
+  <main>
+
+    <!-- CONTACT -->
+    <section class="pane active" data-pane="contact">
+      <p class="section-desc">These power every Email / WhatsApp button on the landing page, including the pre-filled intake message a visitor sees before sending.</p>
+      <div class="grid2">
+        <div class="field">
+          <label for="c-email">Email address</label>
+          <input type="email" id="c-email">
+        </div>
+        <div class="field">
+          <label for="c-whatsapp">WhatsApp number (digits only, with country code)</label>
+          <input type="text" id="c-whatsapp" placeholder="254721403090">
+        </div>
+        <div class="field">
+          <label for="c-phone-display">Phone, as shown on buttons</label>
+          <input type="text" id="c-phone-display" placeholder="+254 721 403 090">
+        </div>
+        <div class="field">
+          <label for="c-linkedin">LinkedIn profile URL</label>
+          <input type="url" id="c-linkedin" placeholder="https://www.linkedin.com/in/...">
+        </div>
+      </div>
+      <div class="field">
+        <label for="c-subject">Email subject line</label>
+        <input type="text" id="c-subject">
+      </div>
+      <div class="field">
+        <label for="c-email-template">Email pre-filled message</label>
+        <textarea id="c-email-template" rows="6"></textarea>
+        <p class="hint">Leave blank lines where you want visitors to fill in details, e.g. "Programme name:".</p>
+      </div>
+      <div class="field">
+        <label for="c-wa-template">WhatsApp pre-filled message</label>
+        <textarea id="c-wa-template" rows="5"></textarea>
+      </div>
+    </section>
+
+    <!-- LINKEDIN -->
+    <section class="pane" data-pane="linkedin">
+      <p class="section-desc">Each entry becomes a card in the "Latest from LinkedIn" section. Add one whenever you publish a new post.</p>
+      <div class="entry-list" id="linkedin-list"></div>
+      <button class="btn" id="add-linkedin">+ Add LinkedIn post</button>
+    </section>
+
+    <!-- CASE STUDIES -->
+    <section class="pane" data-pane="cases">
+      <p class="section-desc">Each entry becomes a card in "Four programmes. Numbers that hold up." Outcomes are comma-separated and each becomes a green chip.</p>
+      <div class="entry-list" id="cases-list"></div>
+      <button class="btn" id="add-case">+ Add case study</button>
+    </section>
+
+    <!-- ORGANISATIONS -->
+    <section class="pane" data-pane="orgs">
+      <p class="section-desc">One organisation per line. Renders as the "Delivered alongside —" strip just under the hero.</p>
+      <div class="field">
+        <label for="orgs-text">Organisations</label>
+        <textarea id="orgs-text" rows="12"></textarea>
+      </div>
+      <div class="field">
+        <label>Preview</label>
+        <div class="chip-preview" id="orgs-preview"></div>
+      </div>
+    </section>
+
+    <!-- SETTINGS -->
+    <section class="pane" data-pane="settings">
+      <div class="card">
+        <p class="section-title">Change admin password</p>
+        <div class="field">
+          <label for="pw-current">Current password</label>
+          <input type="password" id="pw-current">
+        </div>
+        <div class="field">
+          <label for="pw-new">New password</label>
+          <input type="password" id="pw-new">
+        </div>
+        <div class="field">
+          <label for="pw-confirm">Confirm new password</label>
+          <input type="password" id="pw-confirm">
+        </div>
+        <p class="err" id="pw-err"></p>
+        <button class="btn" id="pw-save" style="align-self:flex-start;">Update password</button>
+      </div>
+
+      <div class="card">
+        <p class="section-title">Import a previously saved config.json</p>
+        <p class="section-desc">Use this if you're continuing work on a different device or browser, or want to reload your last saved file before making more edits.</p>
+        <input type="file" id="import-file" accept="application/json">
+      </div>
+
+      <div class="card">
+        <p class="section-title">Reset</p>
+        <p class="section-desc">Clears all fields back to the landing page's original launch content. This does not affect config.json already on GitHub Pages until you save and re-upload.</p>
+        <button class="btn btn-danger" id="reset-defaults" style="align-self:flex-start;">Reset to defaults</button>
+      </div>
+    </section>
+
+  </main>
+
+  <div class="save-bar">
+    <button class="btn" id="download-btn">↓ Save &amp; download config.json</button>
+    <span class="hint" style="align-self:center;">Then upload config.json into the same folder as index.html on GitHub</span>
+  </div>
+</div>
+
+<div class="toast hidden" id="toast"></div>
+
+<script>
+(function(){
+  var PW_KEY = "dp_admin_pw";
+  var DRAFT_KEY = "dp_admin_draft";
+  var DEFAULT_PW = "delivery2026";
+
+  var DEFAULTS = {
+    contact: {
+      email: "agolatomoe@gmail.com",
+      whatsapp: "254721403090",
+      phoneDisplay: "+254 721 403 090",
+      linkedinUrl: "",
+      emailSubject: "Delivery conversation",
+      emailTemplate: "Hi Rhoda,\n\nI'd like to talk about a programme that needs delivery support.\n\nProgramme name: \nCurrent situation: \nTimeline: \n",
+      whatsappTemplate: "Hi Rhoda, I'd like to talk about a programme that needs delivery support.\n\nProgramme name: \nCurrent situation: \nTimeline: "
+    },
+    linkedinPosts: [],
+    caseStudies: [
+      { year:"2024–2025", location:"Pan-African", title:"AU Civic Tech Fund (AUCTF 2.0)",
+        description:"Coordinated delivery across GIZ, CTIN and Ushahidi for a 15-organisation grantee cohort. One grantee won the Nelson Mandela–Graça Machel Innovation Award.",
+        outcomes:["15 grantee orgs · 13 countries","190,000+ direct beneficiaries","42 policy processes influenced"] },
+      { year:"2025", location:"Oyo, Osun & Ondo, Nigeria", title:"NetHope Climate Resilience",
+        description:"Multi-state participatory climate design across NetHope, YARN and state government — community priorities feeding directly into state-level planning.",
+        outcomes:["3 states coordinated","9,500+ people reached"] },
+      { year:"2024", location:"Tana River, Kenya", title:"Tana River Climate Action",
+        description:"SMS, WhatsApp and zero-rated reporting tools built with GIZ, NCPWD, AKCMO and county government — accessible to persons with disabilities and rural households.",
+        outcomes:["4 partners aligned","4,000+ residents reached"] },
+      { year:"2024", location:"Yumbe, Uganda", title:"NetHope Climate Action",
+        description:"Participatory climate data across host and refugee communities — surfaced how climate stress deepens GBV, feeding directly into district planning.",
+        outcomes:["14 sub-counties covered","1,700+ community members engaged"] }
+    ],
+    organisations: ["Ushahidi","UN WFP","UN-Habitat","iHub","GIZ","African Union","CTIN","AfDB","NetHope","YARN","NCPWD","AKCMO","YUGNET","Tana River County Government"]
+  };
+
+  var state = null;
+
+  function loadState(){
+    var draft = localStorage.getItem(DRAFT_KEY);
+    if(draft){
+      try { return JSON.parse(draft); } catch(e){ /* fall through */ }
+    }
+    return JSON.parse(JSON.stringify(DEFAULTS));
+  }
+
+  function saveDraft(){
+    localStorage.setItem(DRAFT_KEY, JSON.stringify(state));
+    var el = document.getElementById("status");
+    el.textContent = "Draft saved to this browser at " + new Date().toLocaleTimeString();
+    el.classList.remove("dirty");
+  }
+
+  function markDirty(){
+    document.getElementById("status").textContent = "Unsaved changes";
+    document.getElementById("status").classList.add("dirty");
+  }
+
+  function showToast(msg){
+    var t = document.getElementById("toast");
+    t.textContent = msg;
+    t.classList.remove("hidden");
+    clearTimeout(showToast._t);
+    showToast._t = setTimeout(function(){ t.classList.add("hidden"); }, 2600);
+  }
+
+  /* ---------- login ---------- */
+  function currentPassword(){
+    return localStorage.getItem(PW_KEY) || DEFAULT_PW;
+  }
+  document.getElementById("login-form").addEventListener("submit", function(e){
+    e.preventDefault();
+    var entered = document.getElementById("login-pw").value;
+    if(entered === currentPassword()){
+      document.getElementById("login-screen").style.display = "none";
+      document.getElementById("shell").classList.add("active");
+      init();
+    } else {
+      document.getElementById("login-err").textContent = "Incorrect password.";
+    }
+  });
+
+  /* ---------- tabs ---------- */
+  document.querySelectorAll(".tab-btn").forEach(function(btn){
+    btn.addEventListener("click", function(){
+      document.querySelectorAll(".tab-btn").forEach(function(b){ b.classList.remove("active"); });
+      document.querySelectorAll(".pane").forEach(function(p){ p.classList.remove("active"); });
+      btn.classList.add("active");
+      document.querySelector('.pane[data-pane="' + btn.dataset.tab + '"]').classList.add("active");
+    });
+  });
+
+  /* ---------- contact tab ---------- */
+  function bindContact(){
+    var map = {
+      "c-email":"email", "c-whatsapp":"whatsapp", "c-phone-display":"phoneDisplay",
+      "c-linkedin":"linkedinUrl", "c-subject":"emailSubject",
+      "c-email-template":"emailTemplate", "c-wa-template":"whatsappTemplate"
+    };
+    Object.keys(map).forEach(function(id){
+      var el = document.getElementById(id);
+      el.value = state.contact[map[id]] || "";
+      el.addEventListener("input", function(){
+        state.contact[map[id]] = el.value;
+        markDirty();
+      });
+    });
+  }
+
+  /* ---------- generic repeatable list helper ---------- */
+  function makeListEditor(opts){
+    // opts: containerId, items, fieldsSpec, addBtnId, renderSummary
+    var container = document.getElementById(opts.containerId);
+
+    function redraw(){
+      container.innerHTML = "";
+      opts.items.forEach(function(item, idx){
+        var card = document.createElement("div");
+        card.className = "card";
+
+        var head = document.createElement("div");
+        head.className = "card-row-head";
+        var title = document.createElement("p");
+        title.className = "section-title";
+        title.textContent = opts.renderSummary(item, idx);
+        var removeBtn = document.createElement("button");
+        removeBtn.className = "btn btn-sm btn-danger";
+        removeBtn.textContent = "Remove";
+        removeBtn.addEventListener("click", function(){
+          opts.items.splice(idx, 1);
+          markDirty();
+          redraw();
+        });
+        head.appendChild(title);
+        head.appendChild(removeBtn);
+        card.appendChild(head);
+
+        opts.fields.forEach(function(f){
+          var field = document.createElement("div");
+          field.className = "field";
+          var label = document.createElement("label");
+          label.textContent = f.label;
+          field.appendChild(label);
+          var input;
+          if(f.type === "textarea"){
+            input = document.createElement("textarea");
+            input.rows = f.rows || 3;
+          } else {
+            input = document.createElement("input");
+            input.type = f.type || "text";
+          }
+          input.value = f.get(item);
+          input.addEventListener("input", function(){
+            f.set(item, input.value);
+            markDirty();
+            title.textContent = opts.renderSummary(item, idx);
+          });
+          field.appendChild(input);
+          card.appendChild(field);
+        });
+
+        container.appendChild(card);
+      });
+    }
+
+    document.getElementById(opts.addBtnId).addEventListener("click", function(){
+      opts.items.push(opts.newItem());
+      markDirty();
+      redraw();
+    });
+
+    redraw();
+    return { redraw: redraw };
+  }
+
+  function bindLinkedIn(){
+    makeListEditor({
+      containerId: "linkedin-list",
+      items: state.linkedinPosts,
+      addBtnId: "add-linkedin",
+      newItem: function(){ return { url:"", date:"", summary:"" }; },
+      renderSummary: function(item){ return item.summary ? item.summary.slice(0,60) : "New LinkedIn post"; },
+      fields: [
+        { label:"Post URL", type:"url", get:function(i){return i.url;}, set:function(i,v){i.url=v;} },
+        { label:"Date (e.g. May 2026)", type:"text", get:function(i){return i.date;}, set:function(i,v){i.date=v;} },
+        { label:"Summary preview", type:"textarea", rows:3, get:function(i){return i.summary;}, set:function(i,v){i.summary=v;} }
+      ]
+    });
+  }
+
+  function bindCases(){
+    makeListEditor({
+      containerId: "cases-list",
+      items: state.caseStudies,
+      addBtnId: "add-case",
+      newItem: function(){ return { year:"", location:"", title:"", description:"", outcomes:[] }; },
+      renderSummary: function(item){ return item.title || "New case study"; },
+      fields: [
+        { label:"Year", type:"text", get:function(i){return i.year;}, set:function(i,v){i.year=v;} },
+        { label:"Location", type:"text", get:function(i){return i.location;}, set:function(i,v){i.location=v;} },
+        { label:"Title", type:"text", get:function(i){return i.title;}, set:function(i,v){i.title=v;} },
+        { label:"Description", type:"textarea", rows:3, get:function(i){return i.description;}, set:function(i,v){i.description=v;} },
+        { label:"Outcomes (comma-separated → each becomes a green chip)", type:"textarea", rows:2,
+          get:function(i){return (i.outcomes||[]).join(", ");},
+          set:function(i,v){ i.outcomes = v.split(",").map(function(s){return s.trim();}).filter(Boolean); } }
+      ]
+    });
+  }
+
+  /* ---------- organisations ---------- */
+  function bindOrgs(){
+    var ta = document.getElementById("orgs-text");
+    var preview = document.getElementById("orgs-preview");
+    ta.value = state.organisations.join("\n");
+    function redrawPreview(){
+      preview.innerHTML = "";
+      state.organisations.forEach(function(name){
+        if(!name.trim()) return;
+        var span = document.createElement("span");
+        span.textContent = name.trim();
+        preview.appendChild(span);
+      });
+    }
+    ta.addEventListener("input", function(){
+      state.organisations = ta.value.split("\n").map(function(s){return s.trim();}).filter(Boolean);
+      markDirty();
+      redrawPreview();
+    });
+    redrawPreview();
+  }
+
+  /* ---------- settings ---------- */
+  function bindSettings(){
+    document.getElementById("pw-save").addEventListener("click", function(){
+      var cur = document.getElementById("pw-current").value;
+      var next = document.getElementById("pw-new").value;
+      var confirm = document.getElementById("pw-confirm").value;
+      var err = document.getElementById("pw-err");
+      err.textContent = "";
+      if(cur !== currentPassword()){ err.textContent = "Current password is incorrect."; return; }
+      if(next.length < 6){ err.textContent = "New password must be at least 6 characters."; return; }
+      if(next !== confirm){ err.textContent = "New passwords do not match."; return; }
+      localStorage.setItem(PW_KEY, next);
+      document.getElementById("pw-current").value = "";
+      document.getElementById("pw-new").value = "";
+      document.getElementById("pw-confirm").value = "";
+      showToast("Password updated.");
+    });
+
+    document.getElementById("import-file").addEventListener("change", function(e){
+      var file = e.target.files[0];
+      if(!file) return;
+      var reader = new FileReader();
+      reader.onload = function(){
+        try {
+          var data = JSON.parse(reader.result);
+          state = Object.assign(JSON.parse(JSON.stringify(DEFAULTS)), data);
+          state.contact = Object.assign({}, DEFAULTS.contact, data.contact || {});
+          renderAll();
+          markDirty();
+          showToast("Config imported. Review and save when ready.");
+        } catch(err){
+          showToast("Could not read that file — is it a valid config.json?");
+        }
+      };
+      reader.readAsText(file);
+    });
+
+    document.getElementById("reset-defaults").addEventListener("click", function(){
+      if(!confirm("Reset all fields to the original launch content? This clears your current draft.")) return;
+      state = JSON.parse(JSON.stringify(DEFAULTS));
+      renderAll();
+      markDirty();
+      showToast("Reset to defaults.");
+    });
+  }
+
+  /* ---------- download ---------- */
+  document.getElementById("download-btn").addEventListener("click", function(){
+    saveDraft();
+    var blob = new Blob([JSON.stringify(state, null, 2)], { type: "application/json" });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement("a");
+    a.href = url;
+    a.download = "config.json";
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+    showToast("config.json downloaded. Upload it next to index.html on GitHub.");
+  });
+
+  function renderAll(){
+    document.getElementById("linkedin-list").innerHTML = "";
+    document.getElementById("cases-list").innerHTML = "";
+    bindContact();
+    bindLinkedIn();
+    bindCases();
+    bindOrgs();
+  }
+
+  function init(){
+    state = loadState();
+    renderAll();
+    bindSettings();
+  }
+})();
+</script>
+</body>
+</html>
