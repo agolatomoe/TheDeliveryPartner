@@ -279,7 +279,7 @@ textarea{ resize:vertical; min-height:5rem; }
 
     <!-- LINKEDIN -->
     <section class="pane" data-pane="linkedin">
-      <p class="section-desc">Each entry becomes a card in the "Latest from LinkedIn" section. Add one whenever you publish a new post.</p>
+      <p class="section-desc">Each entry becomes a card in the "Latest from LinkedIn" section. Add one whenever you publish a new post. The image is optional — paste a direct image URL (e.g. an image hosted on LinkedIn, or uploaded anywhere public); leave it blank for a text-only card.</p>
       <div class="entry-list" id="linkedin-list"></div>
       <button class="btn" id="add-linkedin">+ Add LinkedIn post</button>
     </section>
@@ -521,12 +521,13 @@ textarea{ resize:vertical; min-height:5rem; }
       containerId: "linkedin-list",
       items: state.linkedinPosts,
       addBtnId: "add-linkedin",
-      newItem: function(){ return { url:"", date:"", summary:"" }; },
+      newItem: function(){ return { url:"", date:"", summary:"", image:"" }; },
       renderSummary: function(item){ return item.summary ? item.summary.slice(0,60) : "New LinkedIn post"; },
       fields: [
         { label:"Post URL", type:"url", get:function(i){return i.url;}, set:function(i,v){i.url=v;} },
         { label:"Date (e.g. May 2026)", type:"text", get:function(i){return i.date;}, set:function(i,v){i.date=v;} },
-        { label:"Summary preview", type:"textarea", rows:3, get:function(i){return i.summary;}, set:function(i,v){i.summary=v;} }
+        { label:"Summary preview", type:"textarea", rows:3, get:function(i){return i.summary;}, set:function(i,v){i.summary=v;} },
+        { label:"Image URL (optional)", type:"url", get:function(i){return i.image||"";}, set:function(i,v){i.image=v;} }
       ]
     });
   }
