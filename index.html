@@ -1520,6 +1520,8 @@ footer{
     document.getElementById("share-linkedin").href = "https://www.linkedin.com/sharing/share-offsite/?url=" + encodeURIComponent(shareUrl);
     document.getElementById("share-x").href = "https://twitter.com/intent/tweet?url=" + encodeURIComponent(shareUrl) + "&text=" + encodeURIComponent(shareText);
 
+    var isMobileDevice = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+
     function closeMenu(){
       menu.hidden = true;
       btn.setAttribute("aria-expanded", "false");
@@ -1532,7 +1534,7 @@ footer{
 
     btn.addEventListener("click", function(e){
       e.stopPropagation();
-      if(navigator.share){
+      if(navigator.share && isMobileDevice){
         navigator.share({ title: shareTitle, text: shareText, url: shareUrl }).catch(function(){});
         return;
       }
